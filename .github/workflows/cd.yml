@@ -1,0 +1,26 @@
+name: Continuous delivery (production)
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+env:
+  GITHUB_KEY: ${{ secrets.GITHUB_PACKAGES_SECRET }}
+
+jobs:
+  build:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Publish package
+        run: |
+          VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
+          ./gradlew publish -Pgpr.key="$GITHUB_KEY" -Pversion="$VERSION"

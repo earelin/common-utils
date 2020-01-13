@@ -1,10 +1,13 @@
 plugins {
   id 'jacoco'
   id 'java'
+  id 'maven-publish'
 }
 
 group = 'org.earelin'
 description = 'Common Utils'
+version = "${version}"
+
 sourceCompatibility = '1.8'
 
 configurations {
@@ -32,4 +35,22 @@ dependencies {
 
 test {
   useJUnitPlatform()
+}
+
+publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/earelin/common-utils")
+      credentials {
+        username = ""
+        password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_SECRET")
+      }
+    }
+  }
+  publications {
+    gpr(MavenPublication) {
+      from(components.java)
+    }
+  }
 }
