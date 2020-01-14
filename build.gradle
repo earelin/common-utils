@@ -6,8 +6,6 @@ plugins {
 
 group = 'org.earelin'
 description = 'Common Utils'
-version = "${version}"
-
 sourceCompatibility = '1.8'
 
 configurations {
@@ -40,8 +38,11 @@ test {
 publishing {
   repositories {
     maven {
-      name = "GitHubPackages"
-      url = uri("gcs://earelin-maven")
+      url = uri("http://34.76.244.76/repository/maven-releases/")
+      credentials {
+        username "$mavenUser"
+        password "$mavenPassword"
+      }
     }
   }
   publications {

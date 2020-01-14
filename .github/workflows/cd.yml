@@ -6,7 +6,8 @@ on:
       - '*.*.*'
 
 env:
-  GKE_PROJECT: ${{ secrets.AGRO_PROJECT }}
+  NEXUS_USER: ${{ secrets.NEXUS_USER }}
+  NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
 
 jobs:
   build:
@@ -21,13 +22,7 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Set up Google Cloud
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          version: '270.0.0'
-          service_account_key: ${{ secrets.AGRO_KEY }}
-
       - name: Publish package
         run: |
           VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
-          ./gradlew publish -Pversion="$VERSION"
+          ./gradlew publish -Pversion="$VERSION" -PmavenUser="$NEXUS_USER" -PmavenPassword="$NEXUS_PASSWORD"
